@@ -19,6 +19,7 @@ import { UndefinedProjectPathError } from "./errors";
 import { writeJSON, mkdir } from "fs-extra";
 import { resolve } from "path";
 import { ExampleMultiSelectQuestion, ExampleSingleSelectQuestion } from "./questions";
+import { CoreQuestionNames } from "../../../core/question";
 
 @Service(ResourcePluginsV2.OfficeAddinPlugin)
 export class OfficeAddinPlugin implements v2.ResourcePlugin {
@@ -39,6 +40,7 @@ export class OfficeAddinPlugin implements v2.ResourcePlugin {
     // You can access the answers(id of options selected) to the questions defined in getQuestionsForScaffolding();
     const singleSelectAnswer = inputs[ExampleSingleSelectQuestion.name] as string;
     const multiSelectAnswer = inputs[ExampleMultiSelectQuestion.name] as string[];
+    const lang = inputs[CoreQuestionNames.ProgrammingLanguage] as string;
 
     // TODO: add logic for generating office addin templates
     // we just persist answers here for example.
@@ -46,6 +48,7 @@ export class OfficeAddinPlugin implements v2.ResourcePlugin {
     await writeJSON(resolve(projectRoot, folderName, "inputs.json"), {
       singleSelect: singleSelectAnswer,
       multiSelect: multiSelectAnswer,
+      language: lang,
     });
 
     return ok(Void);

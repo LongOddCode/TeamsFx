@@ -430,6 +430,7 @@ async function addOfficeAddinQuestions(
   if (solutionNodeResult.isErr()) {
     return err(solutionNodeResult.error);
   }
+  officeAddinRoot.addChild(new QTreeNode(ProgrammingLanguageQuestion));
   officeAddinRoot.addChild(new QTreeNode(QuestionRootFolder));
   officeAddinRoot.addChild(new QTreeNode(createAppNameQuestion()));
 
