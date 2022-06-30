@@ -1,8 +1,17 @@
-import { MultiSelectQuestion, OptionItem, SingleSelectQuestion } from "@microsoft/teamsfx-api";
+import {
+  Inputs,
+  MultiSelectQuestion,
+  OptionItem,
+  QTreeNode,
+  SingleSelectQuestion,
+} from "@microsoft/teamsfx-api";
+import { CoreQuestionNames } from "../../../core/question";
 
 export enum QuestionName {
   ExampleSingleSelectQuestion = "example-single-select",
   ExampleMultiSelectQuestion = "example-multi-select",
+  ExampleQuestionForJs = "example-question-js",
+  ExampleQuestionForTs = "example-question-ts",
 }
 
 export const SingleSelectOptionOne: OptionItem = {
@@ -56,3 +65,57 @@ export const ExampleMultiSelectQuestion: MultiSelectQuestion = {
   default: undefined,
   placeholder: "This is placeholder",
 };
+
+export const ExampleQuestionForJs: SingleSelectQuestion = {
+  type: "singleSelect",
+  name: QuestionName.ExampleQuestionForJs,
+  title: "This question only shows if programming language is JavaScript",
+  staticOptions: [SingleSelectOptionOne, SingleSelectOptionTwo],
+  default: SingleSelectOptionOne.id,
+  placeholder: "This is placeholder",
+};
+
+export function createExampleQuestionNodeForJs(): QTreeNode {
+  const node = new QTreeNode(ExampleQuestionForJs);
+  node.condition = {
+    validFunc: async (input: unknown, inputs?: Inputs) => {
+      // inspect the answer to previous questions and decide whether this question shows
+      if (inputs && inputs[CoreQuestionNames.ProgrammingLanguage] === "javascript") {
+        // return undefined you want this question to show.
+        return undefined;
+      } else {
+        // return a string if validation failed. The question won't show.
+        return "language is not js";
+      }
+    },
+  };
+
+  return node;
+}
+
+export const ExampleQuestionForTs: SingleSelectQuestion = {
+  type: "singleSelect",
+  name: QuestionName.ExampleQuestionForTs,
+  title: "This question only shows if programming language is TypeScript",
+  staticOptions: [SingleSelectOptionOne, SingleSelectOptionTwo],
+  default: SingleSelectOptionOne.id,
+  placeholder: "This is placeholder",
+};
+
+export function createExampleQuestionNodeForTs(): QTreeNode {
+  const node = new QTreeNode(ExampleQuestionForTs);
+  node.condition = {
+    validFunc: async (input: unknown, inputs?: Inputs) => {
+      // inspect the answer to previous questions and decide whether this question shows
+      if (inputs && inputs[CoreQuestionNames.ProgrammingLanguage] === "typescript") {
+        // return undefined you want this question to show.
+        return undefined;
+      } else {
+        // return a string if validation failed. The question won't show.
+        return "language is not ts";
+      }
+    },
+  };
+
+  return node;
+}

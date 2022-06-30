@@ -18,7 +18,14 @@ import { ResourcePluginsV2 } from "../../solution/fx-solution/ResourcePluginCont
 import { UndefinedProjectPathError } from "./errors";
 import { writeJSON, mkdir } from "fs-extra";
 import { resolve } from "path";
-import { ExampleMultiSelectQuestion, ExampleSingleSelectQuestion } from "./questions";
+import {
+  createExampleQuestionNodeForJs,
+  createExampleQuestionNodeForTs,
+  ExampleMultiSelectQuestion,
+  ExampleQuestionForJs,
+  ExampleQuestionForTs,
+  ExampleSingleSelectQuestion,
+} from "./questions";
 import { CoreQuestionNames } from "../../../core/question";
 
 @Service(ResourcePluginsV2.OfficeAddinPlugin)
@@ -49,6 +56,8 @@ export class OfficeAddinPlugin implements v2.ResourcePlugin {
       singleSelect: singleSelectAnswer,
       multiSelect: multiSelectAnswer,
       language: lang,
+      jsQuestion: inputs[ExampleQuestionForJs.name],
+      tsQuestion: inputs[ExampleQuestionForTs.name],
     });
 
     return ok(Void);
@@ -62,6 +71,8 @@ export class OfficeAddinPlugin implements v2.ResourcePlugin {
 
     root.addChild(new QTreeNode(ExampleSingleSelectQuestion));
     root.addChild(new QTreeNode(ExampleMultiSelectQuestion));
+    root.addChild(createExampleQuestionNodeForJs());
+    root.addChild(createExampleQuestionNodeForTs());
 
     return ok(root);
   }

@@ -421,16 +421,16 @@ async function addOfficeAddinQuestions(
 ): Promise<Result<Void, FxError>> {
   const officeAddinRoot = new QTreeNode({ type: "group" });
   officeAddinRoot.condition = { equals: CreateNewOfficeAddinOption.id };
-  root.addChild(officeAddinRoot);
+  officeAddinRoot.addChild(new QTreeNode(ProgrammingLanguageQuestion));
 
   const capNode = new QTreeNode(createCapabilityForOfficeAddin());
   officeAddinRoot.addChild(capNode);
+  root.addChild(officeAddinRoot);
 
   const solutionNodeResult = await setSolutionScaffoldingQuestionNodeAsChild(inputs, capNode);
   if (solutionNodeResult.isErr()) {
     return err(solutionNodeResult.error);
   }
-  officeAddinRoot.addChild(new QTreeNode(ProgrammingLanguageQuestion));
   officeAddinRoot.addChild(new QTreeNode(QuestionRootFolder));
   officeAddinRoot.addChild(new QTreeNode(createAppNameQuestion()));
 
