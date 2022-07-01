@@ -23,7 +23,7 @@ import { environmentManager } from "@microsoft/teamsfx-core";
 import { it } from "../../commonlib/it";
 import { Runtime } from "../../commonlib/constants";
 
-export function happyPathTest(runtime: Runtime): void {
+export function happyPathTest(runtime: Runtime, isV3 = false): void {
   describe("Provision", function () {
     const testFolder = getTestFolder();
     const appName = getUniqueAppName();
@@ -37,6 +37,9 @@ export function happyPathTest(runtime: Runtime): void {
     env["TEAMSFX_TEMPLATE_PRERELEASE"] = "alpha";
     if (runtime === Runtime.Dotnet) {
       env["TEAMSFX_CLI_DOTNET"] = "true";
+    }
+    if (isV3) {
+      env["TEAMSFX_APIV3"] = "true";
     }
 
     it("Provision Resource: command and response", async function () {

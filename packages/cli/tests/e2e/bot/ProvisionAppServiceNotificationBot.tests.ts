@@ -8,4 +8,4 @@
 import { Runtime } from "../../commonlib/constants";
 import { happyPathTest } from "./NotificationBotHappyPathCommon";
 
-happyPathTest(Runtime.Node);
+happyPathTest(Runtime.Node, true);

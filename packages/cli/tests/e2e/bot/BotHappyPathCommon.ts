@@ -24,7 +24,8 @@ import { Runtime, CliCapabilities, CliTriggerType } from "../../commonlib/consta
 export async function happyPathTest(
   runtime: Runtime,
   capabilities: CliCapabilities,
-  trigger?: CliTriggerType[]
+  trigger?: CliTriggerType[],
+  isV3 = false
 ): Promise<void> {
   const testFolder = getTestFolder();
   const appName = getUniqueAppName();
@@ -36,6 +37,9 @@ export async function happyPathTest(
   env["TEAMSFX_TEMPLATE_PRERELEASE"] = "alpha";
   if (runtime === Runtime.Dotnet) {
     env["TEAMSFX_CLI_DOTNET"] = "true";
+  }
+  if (isV3) {
+    env["TEAMSFX_APIV3"] = "true";
   }
 
   const triggerStr = trigger === undefined ? "" : `--bot-host-type-trigger ${trigger.join(" ")} `;

@@ -7,6 +7,6 @@ import { it } from "../../commonlib/it";
 
 describe("Provision for Node", () => {
   it("Provision Resource: func hosted notification", async function () {
-    await happyPathTest(Runtime.Node, "notification", ["http-functions"]);
+    await happyPathTest(Runtime.Node, "notification", ["http-functions"], true);
   });
 });
