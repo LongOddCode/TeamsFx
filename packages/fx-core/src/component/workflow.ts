@@ -603,6 +603,7 @@ export async function runAction(
       );
     }
   } catch (e) {
+    context.logProvider.error(JSON.stringify(e));
     return err(assembleError(e));
   }
   context.logProvider.info(
