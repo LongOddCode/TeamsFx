@@ -264,6 +264,17 @@ jobs:
         with:
           path: ~/artifacts
 
+      - name: set id
+        id: setId
+        uses: ayachensiyuan/get-action-job-id@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          run-id: ${{ github.run_id }}
+          run-attempt: ${{ github.run_attempt }}
+      - name: get id
+        run: echo "the job id is ${{ steps.setId.outputs.jobId }}"
+
       - name: List jobs
         id: list-jobs
         working-directory: packages/cli
