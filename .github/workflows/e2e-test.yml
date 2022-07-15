@@ -2,7 +2,8 @@ name: E2E test
 
 on:
   push:
-    branch: [ivanchen/workflows]
+    branches:
+      - ivanchen/workflows
   workflow_dispatch:
     inputs:
       cases:
@@ -139,7 +140,7 @@ jobs:
           npx ts-node .github/scripts/testPlan.ts new cli $version
 
   execute-case:
-
+    if: ${{ needs.setup.outputs.cases }}
     env:
       AZURE_ACCOUNT_NAME: ${{ secrets.TEST_USER_NAME }}
       AZURE_ACCOUNT_OBJECT_ID: ${{ secrets.TEST_USER_OBJECT_ID }}
@@ -213,12 +214,11 @@ jobs:
 
       - name: get job id
         id: get-job-id
-        uses: ayachensiyuan/get-action-job-id@vdev
+        uses: ayachensiyuan/get-action-job-id@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          run-id: ${{ github.run_id }}
-          run-attempt: ${{ github.run_attempt }}
+          job-name: ${{ matrix.cases }}
 
       - name: get report name
         id: get-report-name
