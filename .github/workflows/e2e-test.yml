@@ -22,10 +22,7 @@ on:
       - edited
 
 jobs:
-
   report:
-    if: ${{ always() }}
-    needs: execute-case
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
