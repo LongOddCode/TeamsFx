@@ -1,7 +1,7 @@
 name: E2E test
 
 on:
-  pull:
+  push:
     branch: [ivanchen/workflows]
   workflow_dispatch:
     inputs:
