@@ -1,11 +1,8 @@
 name: E2E test
 
 on:
-  workflow_dispatch:
-    inputs:
-      cases:
-        description: 'specific cases to be excuted. Sample: ["./aad/a.tests.ts", "./bot/b.tests.ts"]. Set empty to run all cases'
-        required: false
+  push:
+    branches: [ivanchen/workflows]
 
 jobs:
   report:
