@@ -55,6 +55,7 @@ import {
 } from "../../../../common/projectSettingsHelper";
 import { getLocalizedString } from "../../../../common/localizeUtils";
 import { sendErrorTelemetryThenReturnError } from "../utils/util";
+import { LocalStateAuthKeys } from "../../../../common/localStateConstants";
 
 function getSubscriptionId(state: Json): string {
   if (state && state[GLOBAL_CONFIG] && state[GLOBAL_CONFIG][SUBSCRIPTION_ID]) {
@@ -135,19 +136,35 @@ async function provisionResourceImpl(
     return err(tenantIdInTokenRes.error);
   }
   const tenantIdInToken = tenantIdInTokenRes.value;
+
+  // if (tenantIdInConfig && tenantIdInToken && tenantIdInToken !== tenantIdInConfig) {
+  //   return err(
+  //     new UserError(
+  //       "Solution",
+  //       SolutionError.TeamsAppTenantIdNotRight,
+  //       getLocalizedString("error.M365AccountNotMatch", envInfo.envName)
+  //     )
+  //   );
+  // }
+  // if (!tenantIdInConfig) {
+  //   teamsAppResource.tenantId = tenantIdInToken;
+  //   solutionConfig.teamsAppTenantId = tenantIdInToken;
+  // }
   if (tenantIdInConfig && tenantIdInToken && tenantIdInToken !== tenantIdInConfig) {
-    return err(
-      new UserError(
-        "Solution",
-        SolutionError.TeamsAppTenantIdNotRight,
-        getLocalizedString("error.M365AccountNotMatch", envInfo.envName)
-      )
-    );
+    const aadInfo = envInfo.state[BuiltInFeaturePluginNames.aad];
+    if (aadInfo) {
+      aadInfo[LocalStateAuthKeys.ClientId] = undefined;
+      aadInfo[LocalStateAuthKeys.ObjectId] = undefined;
+    }
+
+    const botResource = envInfo.state[BuiltInFeaturePluginNames.bot] ?? envInfo.state["teams-bot"];
+    if (botResource) {
+      // TODO: recreate bot maybe?
+    }
   }
-  if (!tenantIdInConfig) {
-    teamsAppResource.tenantId = tenantIdInToken;
-    solutionConfig.teamsAppTenantId = tenantIdInToken;
-  }
+  teamsAppResource.tenantId = tenantIdInToken;
+  solutionConfig.teamsAppTenantId = tenantIdInToken;
+
   if (isAzureProject(azureSolutionSettings) && hasAzureResource(ctx.projectSetting, true)) {
     if (hasAAD(ctx.projectSetting)) {
       if (ctx.permissionRequestProvider === undefined) {
