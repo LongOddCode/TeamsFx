@@ -37,6 +37,7 @@ import {
 } from "../../../../common/telemetry";
 import { AppStudioScopes, getHashedEnv, getResourceGroupInPortal } from "../../../../common/tools";
 import { convertToAlphanumericOnly } from "../../../../common/utils";
+import { ComponentNames } from "../../../../component/constants";
 import { AppStudioPluginV3 } from "../../../resource/appstudio/v3";
 import arm, { updateResourceBaseName } from "../arm";
 import { ResourceGroupInfo } from "../commonQuestions";
@@ -445,16 +446,40 @@ function clearEnvInfoStateResource(envInfo: v3.EnvInfoV3): void {
   envInfo.state.solution.resourceNameSuffix = "";
 
   // we need to have another bot id if provisioning a new azure bot service.
-  const botResource = envInfo.state[BuiltInFeaturePluginNames.bot] ?? envInfo.state["teams-bot"];
-  if (botResource) {
-    if (botResource[LocalStateBotKeys.BotId]) {
-      botResource[LocalStateBotKeys.BotId] = undefined;
-    }
-    if (botResource[LocalStateBotKeys.BotPassword]) {
-      botResource[LocalStateBotKeys.BotPassword] = undefined;
-    }
-    if (botResource[LocalStateAuthKeys.ObjectId]) {
-      botResource[LocalStateAuthKeys.ObjectId] = undefined;
+  // const botResource = envInfo.state[BuiltInFeaturePluginNames.bot] ?? envInfo.state["teams-bot"];
+  // if (botResource) {
+  //   if (botResource[LocalStateBotKeys.BotId]) {
+  //     botResource[LocalStateBotKeys.BotId] = undefined;
+  //   }
+  //   if (botResource[LocalStateBotKeys.BotPassword]) {
+  //     botResource[LocalStateBotKeys.BotPassword] = undefined;
+  //   }
+  //   if (botResource[LocalStateAuthKeys.ObjectId]) {
+  //     botResource[LocalStateAuthKeys.ObjectId] = undefined;
+  //   }
+  // }
+
+  const keysToClear = [
+    BuiltInFeaturePluginNames.bot,
+    BuiltInFeaturePluginNames.frontend,
+    BuiltInFeaturePluginNames.apim,
+    BuiltInFeaturePluginNames.function,
+    BuiltInFeaturePluginNames.identity,
+    BuiltInFeaturePluginNames.keyVault,
+    BuiltInFeaturePluginNames.sql,
+    BuiltInFeaturePluginNames.simpleAuth,
+    ComponentNames.TeamsBot,
+    ComponentNames.TeamsTab,
+    ComponentNames.APIM,
+    ComponentNames.TeamsApi,
+    ComponentNames.Identity,
+    ComponentNames.KeyVault,
+    ComponentNames.AzureSQL,
+  ];
+  const keys = Object.keys(envInfo.state);
+  for (let index = 0; index < keys.length; index++) {
+    if (keysToClear.includes(keys[index])) {
+      envInfo.state[keys[index]] = {};
     }
   }
 }
