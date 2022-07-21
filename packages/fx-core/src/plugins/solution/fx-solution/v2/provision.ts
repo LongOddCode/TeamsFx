@@ -39,7 +39,7 @@ import {
 import _, { isUndefined } from "lodash";
 import { PluginDisplayName } from "../../../../common/constants";
 import { ProvisionContextAdapter } from "./adaptor";
-import { deployArmTemplates, updateResourceBaseName } from "../arm";
+import { deployArmTemplates, updateBotResourceBaseName, updateResourceBaseName } from "../arm";
 import { Container } from "typedi";
 import { ResourcePluginsV2 } from "../ResourcePluginContainer";
 import { PermissionRequestFileProvider } from "../../../../core/permissionRequest";
@@ -55,7 +55,7 @@ import {
 } from "../../../../common/projectSettingsHelper";
 import { getLocalizedString } from "../../../../common/localizeUtils";
 import { sendErrorTelemetryThenReturnError } from "../utils/util";
-import { LocalStateAuthKeys } from "../../../../common/localStateConstants";
+import { LocalStateAuthKeys, LocalStateBotKeys } from "../../../../common/localStateConstants";
 
 function getSubscriptionId(state: Json): string {
   if (state && state[GLOBAL_CONFIG] && state[GLOBAL_CONFIG][SUBSCRIPTION_ID]) {
@@ -150,7 +150,9 @@ async function provisionResourceImpl(
   //   teamsAppResource.tenantId = tenantIdInToken;
   //   solutionConfig.teamsAppTenantId = tenantIdInToken;
   // }
-  if (tenantIdInConfig && tenantIdInToken && tenantIdInToken !== tenantIdInConfig) {
+  const hasSwitchedM365Tenat =
+    tenantIdInConfig && tenantIdInToken && tenantIdInToken !== tenantIdInConfig;
+  if (hasSwitchedM365Tenat) {
     const aadInfo = envInfo.state[BuiltInFeaturePluginNames.aad];
     if (aadInfo) {
       aadInfo[LocalStateAuthKeys.ClientId] = undefined;
@@ -159,7 +161,16 @@ async function provisionResourceImpl(
 
     const botResource = envInfo.state[BuiltInFeaturePluginNames.bot] ?? envInfo.state["teams-bot"];
     if (botResource) {
-      // TODO: recreate bot maybe?
+      if (botResource[LocalStateBotKeys.BotId]) {
+        botResource[LocalStateBotKeys.BotId] = undefined;
+      }
+      if (botResource[LocalStateBotKeys.BotPassword]) {
+        botResource[LocalStateBotKeys.BotPassword] = undefined;
+      }
+      if (botResource[LocalStateAuthKeys.ObjectId]) {
+        botResource[LocalStateAuthKeys.ObjectId] = undefined;
+      }
+      updateBotResourceBaseName(inputs.projectPath, ctx.projectSetting.appName, envInfo.envName);
     }
   }
   teamsAppResource.tenantId = tenantIdInToken;
@@ -216,6 +227,13 @@ async function provisionResourceImpl(
 
     if (solutionConfigRes.value.hasSwitchedSubscription) {
       await updateResourceBaseName(inputs.projectPath, ctx.projectSetting.appName, envInfo.envName);
+    }
+  }
+
+  if (hasSwitchedM365Tenat) {
+    const botResource = envInfo.state[BuiltInFeaturePluginNames.bot] ?? envInfo.state["teams-bot"];
+    if (botResource) {
+      updateBotResourceBaseName(inputs.projectPath, ctx.projectSetting.appName, envInfo.envName);
     }
   }
 

@@ -2,7 +2,7 @@
 param provisionParameters object
 param userAssignedIdentityId string
 
-var resourceBaseName = provisionParameters.resourceBaseName
+var resourceBaseName = contains(provisionParameters, 'botServiceResourceName') ? provisionParameters['botServiceResourceName'] : provisionParameters.resourceBaseName
 var botAadAppClientId = provisionParameters['botAadAppClientId'] // Read AAD app client id for Azure Bot Service from parameters
 var botServiceName = contains(provisionParameters, 'botServiceName') ? provisionParameters['botServiceName'] : '${resourceBaseName}' // Try to read name for Azure Bot Service from parameters
 var botServiceSku = contains(provisionParameters, 'botServiceSku') ? provisionParameters['botServiceSku'] : 'F0' // Try to read SKU for Azure Bot Service from parameters
