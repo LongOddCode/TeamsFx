@@ -1,0 +1,51 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 0,
+    "pending": 0,
+    "failures": 1,
+    "start": "2022-06-16T07:03:42.441Z",
+    "end": "2022-06-16T07:04:15.087Z",
+    "duration": 32646
+  },
+  "tests": [
+    {
+      "title": "Provision Resource: command and response",
+      "fullTitle": "Provision Provision Resource: command and response",
+      "duration": 15102,
+      "currentRetry": 0,
+      "err": {
+        "stack": "Error: Command failed: teamsfx account set --subscription af46c703-f714-4f4c-af42-835a673c2b13\n(×) [TeamsfxCLI.UnknownError]: username must be a non empty string.\n\n    at ChildProcess.exithandler (child_process.js:383:12)\n    at ChildProcess.emit (domain.js:475:12)\n    at maybeClose (internal/child_process.js:1088:16)\n    at Process.ChildProcess._handle.onexit (internal/child_process.js:296:5)",
+        "message": "Command failed: teamsfx account set --subscription af46c703-f714-4f4c-af42-835a673c2b13\n(×) [TeamsfxCLI.UnknownError]: username must be a non empty string.\n",
+        "killed": false,
+        "code": 4294967295,
+        "signal": null,
+        "cmd": "teamsfx account set --subscription af46c703-f714-4f4c-af42-835a673c2b13",
+        "stdout": "",
+        "stderr": "(×) [TeamsfxCLI.UnknownError]: username must be a non empty string.\n"
+      }
+    }
+  ],
+  "pending": [],
+  "failures": [
+    {
+      "title": "Provision Resource: command and response",
+      "fullTitle": "Provision Provision Resource: command and response",
+      "duration": 15102,
+      "currentRetry": 0,
+      "err": {
+        "killed": false,
+        "code": 4294967295,
+        "signal": null,
+        "cmd": "teamsfx account set --subscription af46c703-f714-4f4c-af42-835a673c2b13",
+        "stdout": "",
+        "stderr": "(×) [TeamsfxCLI.UnknownError]: username must be a non empty string.\n",
+        "stack": "Error: Command failed: teamsfx account set --subscription af46c703-f714-4f4c-af42-835a673c2b13\n(×) [TeamsfxCLI.UnknownError]: username must be a non empty string.\n\n    at ChildProcess.exithandler (child_process.js:383:12)\n    at ChildProcess.emit (domain.js:475:12)\n    at maybeClose (internal/child_process.js:1088:16)\n    at Process.ChildProcess._handle.onexit (internal/child_process.js:296:5)",
+        "message": "Command failed: teamsfx account set --subscription af46c703-f714-4f4c-af42-835a673c2b13\n(×) [TeamsfxCLI.UnknownError]: username must be a non empty string.\n",
+        "__type": "Error"
+      }
+    }
+  ],
+  "passes": []
+}

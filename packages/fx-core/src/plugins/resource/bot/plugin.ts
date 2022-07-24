@@ -429,6 +429,7 @@ export class TeamsBotImpl implements PluginImpl {
 
     let botAuthCreds: BotAuthCredential = new BotAuthCredential();
     if (
+      // todo: UPDATE
       this.config.localDebug.botAADCreated()
       // if user input AAD, the object id is not required
       // && (await AppStudio.isAADAppExisting(appStudioToken!, this.config.localDebug.localObjectId!))

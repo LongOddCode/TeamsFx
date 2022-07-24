@@ -197,10 +197,12 @@ export function parseUserName(appStudioToken?: Record<string, unknown>): Result<
 }
 
 export async function checkWhetherLocalDebugM365TenantMatches(
-  localDebugTenantId?: string,
+  ctx: v2.Context,
+  envInfo: v2.EnvInfoV2 | undefined,
   m365TokenProvider?: M365TokenProvider,
   projectPath?: string
 ): Promise<Result<Void, FxError>> {
+  const localDebugTenantId = envInfo?.state.solution.teamsAppTenantId || "";
   if (localDebugTenantId) {
     const appStudioTokenJsonRes = await m365TokenProvider?.getJsonObject({
       scopes: AppStudioScopes,
@@ -229,18 +231,55 @@ export async function checkWhetherLocalDebugM365TenantMatches(
         localFiles.push("bot/.notification.localstore.json");
       }
 
-      const errorMessage = getLocalizedString(
-        "core.localDebug.tenantConfirmNotice",
+      return askForM365TenantConfirm(
+        ctx,
+        envInfo,
         localDebugTenantId,
-        maybeM365UserAccount.value,
-        localFiles.join(", ")
+        maybeM365TenantId.value,
+        localFiles
       );
-      return err(
-        new UserError("Solution", SolutionError.CannotLocalDebugInDifferentTenant, errorMessage)
-      );
+      // const errorMessage = getLocalizedString( // ask for unmatched tenant
+      //   "core.localDebug.tenantConfirmNotice",
+      //   localDebugTenantId,
+      //   maybeM365UserAccount.value,
+      //   localFiles.join(", ")
+      // );
+
+      // return err(
+      //   new UserError("Solution", SolutionError.CannotLocalDebugInDifferentTenant, errorMessage)
+      // );
     }
   }
 
+  return ok(Void);
+}
+
+async function askForM365TenantConfirm(
+  ctx: v2.Context,
+  envInfo: v2.EnvInfoV2,
+  localDebugTenantId: string,
+  maybeM365TenantId: string,
+  localFiles: string[]
+): Promise<Result<Void, FxError>> {
+  const msg = getLocalizedString(
+    // ask for unmatched tenant
+    "core.localDebug.tenantConfirmNotice",
+    localDebugTenantId,
+    maybeM365TenantId,
+    localFiles.join(", ")
+  );
+  const confirmRes = await ctx.userInteraction.showMessage("warn", msg, true, "Continue");
+  const confirm = confirmRes?.isOk() ? confirmRes.value : undefined;
+
+  if (confirm !== "Continue") {
+    return err(new UserError(SolutionSource, "CancelLocalDebug", "CancelLocalDebug"));
+  } else {
+    // clear content
+    const keys = Object.keys(envInfo.state);
+    for (let index = 0; index < keys.length; index++) {
+      envInfo.state[keys[index]] = {};
+    }
+  }
   return ok(Void);
 }
 

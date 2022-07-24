@@ -59,16 +59,14 @@ export async function provisionLocalResource(
     return new v2.FxFailure(appStudioTokenRes.error);
   }
   // Pop-up window to confirm if local debug in another tenant
-  let localDebugTenantId = "";
-  localDebugTenantId = envInfo?.state.solution.teamsAppTenantId;
-
   const m365TenantMatches = await checkWhetherLocalDebugM365TenantMatches(
-    localDebugTenantId,
+    ctx,
+    envInfo,
     tokenProvider.m365TokenProvider,
     inputs.projectPath
   );
   if (m365TenantMatches.isErr()) {
-    return new v2.FxFailure(m365TenantMatches.error);
+    return new v2.FxFailure(m365TenantMatches.error); // TODO: update error message
   }
 
   const plugins = getSelectedPlugins(ctx.projectSetting);
