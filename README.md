@@ -1,8 +1,6 @@
 # Microsoft Teams Toolkit
 
 asdf
-[![SDK CI workflow](https://github.com/OfficeDev/TeamsFx/actions/workflows/sdk-ci.yml/badge.svg)](https://github.com/OfficeDev/TeamsFx/actions/workflows/sdk-ci.yml)
-[![DotNet SDK CI workflow](https://github.com/OfficeDev/TeamsFx/actions/workflows/dotnetsdk-ci.yml/badge.svg)](https://github.com/OfficeDev/TeamsFx/actions/workflows/dotnetsdk-ci.yml)
 [![Function Extension CI workflow](https://github.com/OfficeDev/TeamsFx/actions/workflows/FunctionExtensionCI.yml/badge.svg)](https://github.com/OfficeDev/TeamsFx/actions/workflows/FunctionExtensionCI.yml)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/OfficeDev/TeamsFx.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/OfficeDev/TeamsFx/context:javascript)
 
