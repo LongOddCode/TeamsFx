@@ -45,4 +45,5 @@ jobs:
       - name: Unit Test
         run: |
           xvfb-run -a npx lerna run test:unit --stream
-          npx codecov 
+          npx coveralls
+
